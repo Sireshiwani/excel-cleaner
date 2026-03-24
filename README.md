@@ -1,1 +1,50 @@
 # excel-cleaner
+
+Simple Python CLI to merge values from every 2 adjacent data rows in an Excel
+sheet while keeping the header row unchanged.
+
+## Setup
+
+```bash
+python -m pip install openpyxl
+```
+
+## Usage
+
+```bash
+python merge_adjacent_rows.py input.xlsx
+```
+
+By default this writes `input_merged.xlsx`.
+
+Optional arguments:
+
+```bash
+python merge_adjacent_rows.py input.xlsx \
+  --output-file output.xlsx \
+  --sheet "Sheet1" \
+  --separator " | "
+```
+
+## Merge rules
+
+Header row (row 1) is preserved as-is.
+
+Starting at row 2, rows are merged in pairs:
+- Rows 2 + 3 become one row
+- Rows 4 + 5 become one row
+- and so on
+
+Per-column merge behavior:
+- If one value is empty, the non-empty value is kept
+- If both values are equal, value is kept once
+- If both values are non-empty and different, values are concatenated with
+  separator (default: single space)
+
+If there is an odd number of data rows, the last unpaired row is kept as-is.
+
+## Run tests
+
+```bash
+python -m unittest discover -s tests -p "test_*.py"
+```
