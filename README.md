@@ -6,13 +6,13 @@ sheet while keeping the header row unchanged.
 ## Setup
 
 ```bash
-python -m pip install openpyxl
+python3 -m pip install -r requirements.txt
 ```
 
 ## Usage
 
 ```bash
-python merge_adjacent_rows.py input.xlsx
+python3 merge_adjacent_rows.py input.xlsx
 ```
 
 By default this writes `input_merged.xlsx`.
@@ -20,7 +20,7 @@ By default this writes `input_merged.xlsx`.
 Optional arguments:
 
 ```bash
-python merge_adjacent_rows.py input.xlsx \
+python3 merge_adjacent_rows.py input.xlsx \
   --output-file output.xlsx \
   --sheet "Sheet1" \
   --separator " | "
@@ -46,5 +46,5 @@ If there is an odd number of data rows, the last unpaired row is kept as-is.
 ## Run tests
 
 ```bash
-python -m unittest discover -s tests -p "test_*.py"
+python3 -m unittest discover -s tests -p "test_*.py"
 ```
