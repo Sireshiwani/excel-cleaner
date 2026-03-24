@@ -11,6 +11,7 @@ processed in pairs (2+3, 4+5, ...):
 from __future__ import annotations
 
 import argparse
+from io import BytesIO
 from pathlib import Path
 from typing import Any, Iterable, List, Optional
 
@@ -96,6 +97,21 @@ def process_workbook(
     final_output_path = build_output_path(input_path, output_path)
     wb.save(final_output_path)
     return final_output_path
+
+
+def process_workbook_bytes(
+    workbook_bytes: bytes,
+    sheet_name: Optional[str] = None,
+    separator: str = " ",
+) -> bytes:
+    """Load, transform, and return a merged workbook as bytes."""
+    wb = load_workbook(filename=BytesIO(workbook_bytes))
+    ws = wb[sheet_name] if sheet_name else wb.active
+    merge_adjacent_rows_in_worksheet(ws, separator=separator)
+
+    output_buffer = BytesIO()
+    wb.save(output_buffer)
+    return output_buffer.getvalue()
 
 
 def parse_args() -> argparse.Namespace:

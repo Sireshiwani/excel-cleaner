@@ -1,7 +1,7 @@
 # excel-cleaner
 
-Simple Python CLI to merge values from every 2 adjacent data rows in an Excel
-sheet while keeping the header row unchanged.
+Simple Python tools (CLI + web app) to merge values from every 2 adjacent data
+rows in an Excel sheet while keeping the header row unchanged.
 
 ## Setup
 
@@ -9,7 +9,7 @@ sheet while keeping the header row unchanged.
 python3 -m pip install -r requirements.txt
 ```
 
-## Usage
+## CLI usage
 
 ```bash
 python3 merge_adjacent_rows.py input.xlsx
@@ -25,6 +25,23 @@ python3 merge_adjacent_rows.py input.xlsx \
   --sheet "Sheet1" \
   --separator " | "
 ```
+
+## Web app usage
+
+Start the server:
+
+```bash
+python3 web_app.py
+```
+
+Then open:
+
+```text
+http://localhost:5000
+```
+
+Upload your `.xlsx` file, optionally set sheet name/separator, and download the
+merged result.
 
 ## Merge rules
 
