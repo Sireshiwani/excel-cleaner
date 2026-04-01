@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-6 flex flex-wrap items-center gap-3">
+  <h1 class="mr-auto font-sans text-3xl font-bold">Reporting</h1>
+  <a class="rounded bg-gccharcoal px-3 py-2 text-sm" href="{{ url_for('main.admin_dashboard') }}">Back to Dashboard</a>
+  <a class="rounded bg-gcbronze px-3 py-2 text-sm font-bold text-black" href="{{ url_for('main.export_reports', mode=mode) }}">Export CSV</a>
+</div>
+
+<form class="mb-6 grid gap-3 rounded-xl border border-gccharcoal bg-gccharcoal/40 p-4 md:grid-cols-4" method="get">
+  <select name="mode" class="rounded border border-gccharcoal bg-black px-3 py-2">
+    {% for m in ['daily','weekly','monthly','custom'] %}
+      <option value="{{ m }}" {% if mode == m %}selected{% endif %}>{{ m.title() }}</option>
+    {% endfor %}
+  </select>
+  <input type="date" name="start" class="rounded border border-gccharcoal bg-black px-3 py-2" />
+  <input type="date" name="end" class="rounded border border-gccharcoal bg-black px-3 py-2" />
+  <button class="rounded bg-gcbronze px-4 py-2 font-sans font-bold text-black">Apply</button>
+</form>
+
+<h2 class="mb-2 font-sans text-xl font-bold">Sales by Staff (Commissions)</h2>
+<div class="mb-8 overflow-x-auto rounded-xl border border-gccharcoal">
+  <table class="w-full text-sm">
+    <thead class="bg-gccharcoal text-left text-gray-300"><tr><th class="p-2">Staff</th><th>Gross</th><th>Commission %</th><th>Staff Earnings</th><th>Shop Net</th></tr></thead>
+    <tbody>
+      {% for row in by_staff %}
+      <tr class="border-t border-gccharcoal"><td class="p-2">{{ row.name }}</td><td>${{ '%.2f'|format(row.gross) }}</td><td>{{ '%.0f'|format(row.commission_rate * 100) }}%</td><td>${{ '%.2f'|format(row.staff_earnings) }}</td><td>${{ '%.2f'|format(row.shop_net) }}</td></tr>
+      {% else %}
+      <tr><td class="p-2 text-gray-500" colspan="5">No sales in selected range.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2 class="mb-2 font-sans text-xl font-bold">Sales by Category</h2>
+<div class="mb-8 overflow-x-auto rounded-xl border border-gccharcoal">
+  <table class="w-full text-sm">
+    <thead class="bg-gccharcoal text-left text-gray-300"><tr><th class="p-2">Category</th><th>Total</th></tr></thead>
+    <tbody>{% for row in by_category %}<tr class="border-t border-gccharcoal"><td class="p-2">{{ row.category }}</td><td>${{ '%.2f'|format(row.total) }}</td></tr>{% else %}<tr><td colspan="2" class="p-2 text-gray-500">No category data.</td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+
+<h2 class="mb-2 font-sans text-xl font-bold">Expenses by Category</h2>
+<div class="mb-8 overflow-x-auto rounded-xl border border-gccharcoal">
+  <table class="w-full text-sm">
+    <thead class="bg-gccharcoal text-left text-gray-300"><tr><th class="p-2">Category</th><th>Total</th></tr></thead>
+    <tbody>{% for row in expense_categories %}<tr class="border-t border-gccharcoal"><td class="p-2">{{ row.category }}</td><td>${{ '%.2f'|format(row.total) }}</td></tr>{% else %}<tr><td colspan="2" class="p-2 text-gray-500">No expense category data.</td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+
+<h2 class="mb-2 font-sans text-xl font-bold">Detailed Sales</h2>
+<div class="mb-8 overflow-x-auto rounded-xl border border-gccharcoal">
+  <table class="w-full text-sm">
+    <thead class="bg-gccharcoal text-left text-gray-300"><tr><th class="p-2">Date</th><th>Service</th><th>Category</th><th>Staff</th><th>Gross</th><th>Staff Earnings</th><th>Shop Net</th><th>Payment</th></tr></thead>
+    <tbody>
+      {% for sale in sales %}
+        {% set earnings = sale.price * sale.staff.commission_rate %}
+        <tr class="border-t border-gccharcoal">
+          <td class="p-2">{{ sale.date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ sale.service_rendered }}</td>
+          <td>{{ sale.category }}</td>
+          <td>{{ sale.staff.name }}</td>
+          <td>${{ '%.2f'|format(sale.price) }}</td>
+          <td>${{ '%.2f'|format(earnings) }}</td>
+          <td>${{ '%.2f'|format(sale.price - earnings) }}</td>
+          <td>{{ sale.payment_method }}</td>
+        </tr>
+      {% else %}
+      <tr><td colspan="8" class="p-2 text-gray-500">No detailed sales rows.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2 class="mb-2 font-sans text-xl font-bold">Detailed Expenses</h2>
+<div class="overflow-x-auto rounded-xl border border-gccharcoal">
+  <table class="w-full text-sm">
+    <thead class="bg-gccharcoal text-left text-gray-300"><tr><th class="p-2">Date</th><th>Category</th><th>Description</th><th>Amount</th></tr></thead>
+    <tbody>
+      {% for expense in expenses %}
+        <tr class="border-t border-gccharcoal"><td class="p-2">{{ expense.date.strftime('%Y-%m-%d') }}</td><td>{{ expense.category }}</td><td>{{ expense.description }}</td><td>${{ '%.2f'|format(expense.amount) }}</td></tr>
+      {% else %}
+        <tr><td colspan="4" class="p-2 text-gray-500">No expense rows.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

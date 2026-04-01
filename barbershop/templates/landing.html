@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="relative overflow-hidden rounded-2xl border border-gccharcoal bg-gradient-to-br from-black to-gccharcoal p-10">
+  <div class="absolute inset-0 opacity-25" style="background-image: url('https://images.unsplash.com/photo-1593702288056-f5834f9f315d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;"></div>
+  <div class="relative z-10 max-w-2xl">
+    <p class="font-sans uppercase tracking-[0.25em] text-gcgold">Premium Grooming</p>
+    <h1 class="mt-3 font-sans text-5xl font-extrabold leading-tight text-white">Sharp Cuts. Bold Presence.</h1>
+    <p class="mt-4 text-lg text-gray-200">Experience precision barbering crafted for modern gentlemen in a dark, luxe environment.</p>
+    <a href="#booking" class="mt-8 inline-block rounded bg-gcbronze px-6 py-3 font-sans font-bold text-black hover:bg-gcgold">Book Now</a>
+  </div>
+</section>
+
+<section class="mt-14" id="services">
+  <div class="mb-6 flex items-center justify-between">
+    <h2 class="font-sans text-3xl font-bold">Our Services</h2>
+    <span class="font-sans text-sm uppercase tracking-widest text-gcgold">Luxury Menu</span>
+  </div>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    {% for service in services %}
+      <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+        <h3 class="font-sans text-xl font-semibold text-gcgold">{{ service.name }}</h3>
+        <p class="mt-1 text-sm text-gray-400">{{ service.category }}</p>
+        <p class="mt-3 text-sm text-gray-300">{{ service.description }}</p>
+        <p class="mt-4 font-sans text-2xl font-bold text-white">${{ '%.2f'|format(service.price) }}</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="mt-14" id="team">
+  <h2 class="mb-6 font-sans text-3xl font-bold">Meet the Team</h2>
+  <div class="grid gap-4 md:grid-cols-2">
+    {% for member in team %}
+      <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+        <h3 class="font-sans text-xl font-semibold">{{ member.name }}</h3>
+        <p class="mt-1 uppercase tracking-wider text-gcgold">{{ member.role }}</p>
+        <p class="mt-2 text-gray-400">Commission {{ '%.0f'|format(member.commission_rate * 100) }}%</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="mt-14 rounded-2xl border border-gccharcoal bg-black p-8" id="booking">
+  <h2 class="mb-6 font-sans text-3xl font-bold">Book an Appointment</h2>
+  <form class="grid gap-4 md:grid-cols-2" method="post" action="{{ url_for('main.book') }}">
+    <input required name="customer_name" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2" placeholder="Full name" />
+    <input required type="email" name="customer_email" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2" placeholder="Email" />
+    <input required name="customer_phone" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2" placeholder="Phone" />
+    <select required name="service_name" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2">
+      {% for service in services %}
+        <option value="{{ service.name }}">{{ service.name }} - ${{ '%.2f'|format(service.price) }}</option>
+      {% endfor %}
+    </select>
+    <input required type="datetime-local" name="appointment_datetime" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2 md:col-span-2" />
+    <textarea name="notes" rows="3" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2 md:col-span-2" placeholder="Notes (optional)"></textarea>
+    <button class="rounded bg-gcbronze px-5 py-3 font-sans font-bold text-black hover:bg-gcgold md:col-span-2">Submit Booking</button>
+  </form>
+</section>
+{% endblock %}

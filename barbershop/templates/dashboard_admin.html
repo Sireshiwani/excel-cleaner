@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-6 flex flex-wrap items-center gap-3">
+  <h1 class="mr-auto font-sans text-3xl font-bold">Operations Dashboard</h1>
+  <a class="rounded bg-gccharcoal px-3 py-2 text-sm" href="{{ url_for('main.sales_page') }}">Sales</a>
+  <a class="rounded bg-gccharcoal px-3 py-2 text-sm" href="{{ url_for('main.expenses_page') }}">Expenses</a>
+  {% if current_user.role == 'admin' %}
+  <a class="rounded bg-gccharcoal px-3 py-2 text-sm" href="{{ url_for('main.manage_staff') }}">Staff</a>
+  <a class="rounded bg-gccharcoal px-3 py-2 text-sm" href="{{ url_for('main.manage_services') }}">Services</a>
+  <a class="rounded bg-gccharcoal px-3 py-2 text-sm" href="{{ url_for('main.payouts_page') }}">Payouts</a>
+  {% endif %}
+  <a class="rounded bg-gcbronze px-3 py-2 text-sm font-bold text-black" href="{{ url_for('main.reports') }}">Reports</a>
+</div>
+
+<form class="mb-6 grid gap-3 rounded-xl border border-gccharcoal bg-gccharcoal/40 p-4 md:grid-cols-4" method="get">
+  <select name="mode" class="rounded border border-gccharcoal bg-black px-3 py-2">
+    {% for m in ['daily','weekly','monthly','custom'] %}
+      <option value="{{ m }}" {% if mode == m %}selected{% endif %}>{{ m.title() }}</option>
+    {% endfor %}
+  </select>
+  <input type="date" name="start" class="rounded border border-gccharcoal bg-black px-3 py-2" />
+  <input type="date" name="end" class="rounded border border-gccharcoal bg-black px-3 py-2" />
+  <button class="rounded bg-gcbronze px-4 py-2 font-sans font-bold text-black">Apply</button>
+</form>
+
+<div class="grid gap-4 md:grid-cols-3">
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+    <p class="text-sm text-gray-400">Today's Sales</p>
+    <h2 class="mt-2 font-sans text-3xl font-bold text-gcgold">${{ '%.2f'|format(metrics.today_sales) }}</h2>
+  </article>
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+    <p class="text-sm text-gray-400">This Month's Sales</p>
+    <h2 class="mt-2 font-sans text-3xl font-bold text-gcgold">${{ '%.2f'|format(metrics.month_sales) }}</h2>
+  </article>
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+    <p class="text-sm text-gray-400">This Month's Expenses</p>
+    <h2 class="mt-2 font-sans text-3xl font-bold text-gcgold">${{ '%.2f'|format(metrics.month_expenses) }}</h2>
+  </article>
+</div>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/30 p-5">
+    <h3 class="mb-4 font-sans text-xl font-bold">Top Performing Staff</h3>
+    <canvas id="staffChart" height="130"></canvas>
+    <ul class="mt-4 space-y-2 text-sm">
+      {% for row in leaderboard %}
+        <li class="flex justify-between border-b border-gccharcoal pb-1"><span>{{ row.name }}</span><strong>${{ '%.2f'|format(row.total) }}</strong></li>
+      {% else %}
+        <li class="text-gray-500">No data in selected range.</li>
+      {% endfor %}
+    </ul>
+  </article>
+
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/30 p-5">
+    <h3 class="mb-4 font-sans text-xl font-bold">Sales by Category</h3>
+    <canvas id="salesCategoryChart" height="130"></canvas>
+    <h3 class="mb-4 mt-8 font-sans text-xl font-bold">Expenses by Category</h3>
+    <canvas id="expenseCategoryChart" height="130"></canvas>
+  </article>
+</div>
+
+<script>
+  const staffData = {{ leaderboard|tojson }};
+  const salesCategoryData = {{ category_sales|tojson }};
+  const expenseCategoryData = {{ category_expenses|tojson }};
+
+  new Chart(document.getElementById('staffChart'), {
+    type: 'bar',
+    data: {
+      labels: staffData.map(r => r.name),
+      datasets: [{ label: 'Sales', data: staffData.map(r => r.total), backgroundColor: '#b08d57' }]
+    }
+  });
+
+  new Chart(document.getElementById('salesCategoryChart'), {
+    type: 'pie',
+    data: {
+      labels: salesCategoryData.map(r => r.category),
+      datasets: [{ data: salesCategoryData.map(r => r.total), backgroundColor: ['#d4af37','#b08d57','#8b6b3d','#5f4a2d','#c9a24f'] }]
+    }
+  });
+
+  new Chart(document.getElementById('expenseCategoryChart'), {
+    type: 'doughnut',
+    data: {
+      labels: expenseCategoryData.map(r => r.category),
+      datasets: [{ data: expenseCategoryData.map(r => r.total), backgroundColor: ['#9ca3af','#6b7280','#4b5563','#374151','#1f2937'] }]
+    }
+  });
+</script>
+{% endblock %}
