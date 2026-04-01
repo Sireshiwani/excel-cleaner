@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import click
 from flask import Flask
@@ -76,7 +76,7 @@ def register_cli(app: Flask) -> None:
         ]
         db.session.add_all(services)
 
-        now = datetime.utcnow()
+        now = datetime.now(UTC).replace(tzinfo=None)
         sales = [
             Sale(
                 service_rendered="Signature Haircut",

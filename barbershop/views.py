@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from functools import wraps
 from io import StringIO
 import csv
@@ -114,7 +114,9 @@ def admin_dashboard():
     end_raw = request.args.get("end")
     start, end = resolve_date_range(mode, start_raw, end_raw)
 
-    today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    today_start = datetime.now(UTC).replace(
+        hour=0, minute=0, second=0, microsecond=0, tzinfo=None
+    )
     today_end = today_start + timedelta(days=1)
     month_start, month_end = resolve_date_range("monthly", None, None)
 
@@ -153,7 +155,7 @@ def staff_dashboard():
     upcoming = (
         Appointment.query.filter(
             Appointment.staff_id == current_user.id,
-            Appointment.appointment_datetime >= datetime.utcnow(),
+            Appointment.appointment_datetime >= datetime.now(UTC).replace(tzinfo=None),
         )
         .order_by(Appointment.appointment_datetime.asc())
         .all()

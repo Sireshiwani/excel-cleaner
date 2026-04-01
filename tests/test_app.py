@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 
@@ -58,7 +58,7 @@ def app():
                 price=50.0,
                 staff_id=staff.id,
                 payment_method="Card",
-                date=datetime.utcnow(),
+                date=datetime.now(UTC).replace(tzinfo=None),
             )
         )
         db.session.add(
@@ -66,7 +66,7 @@ def app():
                 category="Supplies",
                 amount=20.0,
                 description="Clippers oil",
-                date=datetime.utcnow(),
+                date=datetime.now(UTC).replace(tzinfo=None),
             )
         )
         db.session.commit()

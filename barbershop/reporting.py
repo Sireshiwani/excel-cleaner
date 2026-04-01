@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Iterable, Optional, Tuple
 
 from sqlalchemy import func
@@ -12,7 +12,7 @@ from .models import Expense, Sale, User
 def resolve_date_range(
     mode: str, start_raw: Optional[str], end_raw: Optional[str]
 ) -> Tuple[datetime, datetime]:
-    now = datetime.utcnow()
+    now = datetime.now(UTC).replace(tzinfo=None)
     mode = (mode or "monthly").lower()
 
     if mode == "daily":
