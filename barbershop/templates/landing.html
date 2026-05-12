@@ -1,59 +1,301 @@
-{% extends "base.html" %}
-{% block content %}
-<section class="relative overflow-hidden rounded-2xl border border-gccharcoal bg-gradient-to-br from-black to-gccharcoal p-10">
-  <div class="absolute inset-0 opacity-25" style="background-image: url('https://images.unsplash.com/photo-1593702288056-f5834f9f315d?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;"></div>
-  <div class="relative z-10 max-w-2xl">
-    <p class="font-sans uppercase tracking-[0.25em] text-gcgold">Premium Grooming</p>
-    <h1 class="mt-3 font-sans text-5xl font-extrabold leading-tight text-white">Sharp Cuts. Bold Presence.</h1>
-    <p class="mt-4 text-lg text-gray-200">Experience precision barbering crafted for modern gentlemen in a dark, luxe environment.</p>
-    <a href="#booking" class="mt-8 inline-block rounded bg-gcbronze px-6 py-3 font-sans font-bold text-black hover:bg-gcgold">Book Now</a>
-  </div>
-</section>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FineCuts - Modern Grooming Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen overflow-x-hidden bg-[#070B14] text-white">
+    {% set feature_cards = [
+      {
+        "title": "Instant Booking",
+        "description": "Book barbers and salons in real-time with seamless scheduling and confirmations."
+      },
+      {
+        "title": "Verified Professionals",
+        "description": "Connect with trusted barbers, salons, stylists, and grooming experts near you."
+      },
+      {
+        "title": "Fast Payments",
+        "description": "Integrated mobile money and instant vendor payouts for a smooth experience."
+      }
+    ] %}
 
-<section class="mt-14" id="services">
-  <div class="mb-6 flex items-center justify-between">
-    <h2 class="font-sans text-3xl font-bold">Our Services</h2>
-    <span class="font-sans text-sm uppercase tracking-widest text-gcgold">Luxury Menu</span>
-  </div>
-  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-    {% for service in services %}
-      <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
-        <h3 class="font-sans text-xl font-semibold text-gcgold">{{ service.name }}</h3>
-        <p class="mt-1 text-sm text-gray-400">{{ service.category }}</p>
-        <p class="mt-3 text-sm text-gray-300">{{ service.description }}</p>
-        <p class="mt-4 font-sans text-2xl font-bold text-white">${{ '%.2f'|format(service.price) }}</p>
-      </article>
-    {% endfor %}
-  </div>
-</section>
+    {% set service_names = [
+      "Haircuts",
+      "Dreadlocks",
+      "Beard Grooming",
+      "Braiding",
+      "Nail Care",
+      "Spa & Massage"
+    ] %}
 
-<section class="mt-14" id="team">
-  <h2 class="mb-6 font-sans text-3xl font-bold">Meet the Team</h2>
-  <div class="grid gap-4 md:grid-cols-2">
-    {% for member in team %}
-      <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
-        <h3 class="font-sans text-xl font-semibold">{{ member.name }}</h3>
-        <p class="mt-1 uppercase tracking-wider text-gcgold">{{ member.role }}</p>
-        <p class="mt-2 text-gray-400">Commission {{ '%.0f'|format(member.commission_rate * 100) }}%</p>
-      </article>
-    {% endfor %}
-  </div>
-</section>
+    <nav class="sticky top-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-2xl bg-gradient-to-br from-violet-500 to-cyan-400"></div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight">FineCuts</h1>
+            <p class="text-xs text-gray-400">Modern Grooming Platform</p>
+          </div>
+        </div>
 
-<section class="mt-14 rounded-2xl border border-gccharcoal bg-black p-8" id="booking">
-  <h2 class="mb-6 font-sans text-3xl font-bold">Book an Appointment</h2>
-  <form class="grid gap-4 md:grid-cols-2" method="post" action="{{ url_for('main.book') }}">
-    <input required name="customer_name" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2" placeholder="Full name" />
-    <input required type="email" name="customer_email" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2" placeholder="Email" />
-    <input required name="customer_phone" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2" placeholder="Phone" />
-    <select required name="service_name" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2">
-      {% for service in services %}
-        <option value="{{ service.name }}">{{ service.name }} - ${{ '%.2f'|format(service.price) }}</option>
-      {% endfor %}
-    </select>
-    <input required type="datetime-local" name="appointment_datetime" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2 md:col-span-2" />
-    <textarea name="notes" rows="3" class="rounded border border-gccharcoal bg-gccharcoal px-3 py-2 md:col-span-2" placeholder="Notes (optional)"></textarea>
-    <button class="rounded bg-gcbronze px-5 py-3 font-sans font-bold text-black hover:bg-gcgold md:col-span-2">Submit Booking</button>
-  </form>
-</section>
-{% endblock %}
+        <div class="hidden items-center gap-8 text-sm text-gray-300 md:flex">
+          <a href="#features" class="transition hover:text-white">Features</a>
+          <a href="#services" class="transition hover:text-white">Services</a>
+          <a href="#download" class="transition hover:text-white">Mobile App</a>
+          <a href="#contact" class="transition hover:text-white">Contact</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="{{ url_for('main.login') }}" class="hidden rounded-xl border border-white/10 px-5 py-2 transition hover:bg-white/5 md:block">Login</a>
+          <a href="#booking" class="rounded-xl bg-gradient-to-r from-violet-500 to-cyan-400 px-5 py-2 font-medium transition hover:scale-105">Get Started</a>
+        </div>
+      </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mx-auto mt-4 max-w-7xl px-6">
+          <div class="space-y-2">
+            {% for category, message in messages %}
+              <div class="rounded-xl border border-white/10 px-4 py-3 text-sm {{ 'bg-red-500/15 text-red-200' if category == 'error' else 'bg-emerald-500/15 text-emerald-200' }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section class="relative">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.25),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.18),transparent_35%)]"></div>
+
+      <div class="relative mx-auto grid max-w-7xl items-center gap-16 px-6 py-24 lg:grid-cols-2 lg:py-32">
+        <div>
+          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-sm text-violet-300">
+            Premium Grooming Experience
+          </div>
+
+          <h1 class="text-5xl font-black leading-tight tracking-tight lg:text-7xl">
+            Book Premium
+            <span class="bg-gradient-to-r from-violet-400 to-cyan-300 bg-clip-text text-transparent"> Grooming</span>
+            <br />
+            Services Instantly.
+          </h1>
+
+          <p class="mt-8 max-w-xl text-lg leading-relaxed text-gray-300">
+            Discover trusted barbers, salons, and stylists near you with seamless booking,
+            real-time availability, mobile payments, and loyalty rewards.
+          </p>
+
+          <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+            <a href="#booking" class="rounded-2xl bg-gradient-to-r from-violet-500 to-cyan-400 px-8 py-4 text-center text-lg font-semibold shadow-2xl shadow-violet-500/20 transition hover:scale-105">
+              Book Appointment
+            </a>
+            <a href="#services" class="rounded-2xl border border-white/10 bg-white/5 px-8 py-4 text-center text-lg transition hover:bg-white/10">
+              Explore Salons
+            </a>
+          </div>
+
+          <div class="mt-12 grid max-w-lg grid-cols-3 gap-6">
+            <div>
+              <h3 class="text-3xl font-bold">20K+</h3>
+              <p class="mt-1 text-sm text-gray-400">Bookings</p>
+            </div>
+            <div>
+              <h3 class="text-3xl font-bold">500+</h3>
+              <p class="mt-1 text-sm text-gray-400">Professionals</p>
+            </div>
+            <div>
+              <h3 class="text-3xl font-bold">15+</h3>
+              <p class="mt-1 text-sm text-gray-400">Cities</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative flex justify-center">
+          <div class="absolute h-80 w-80 rounded-full bg-violet-500/20 blur-3xl"></div>
+
+          <div class="relative h-[650px] w-[320px] overflow-hidden rounded-[3rem] border border-white/10 bg-[#0F172A] shadow-2xl">
+            <div class="flex h-14 items-center justify-center border-b border-white/10 text-sm text-gray-400">
+              FineCuts Mobile
+            </div>
+
+            <div class="space-y-5 p-5">
+              <div class="rounded-3xl bg-gradient-to-br from-violet-500 to-cyan-400 p-5 text-white">
+                <p class="text-sm opacity-90">Next Appointment</p>
+                <h3 class="mt-2 text-2xl font-bold">Fade & Beard Trim</h3>
+                <p class="mt-2 opacity-90">Today • 3:00 PM</p>
+              </div>
+
+              <div class="space-y-4">
+                {% for _ in range(3) %}
+                  <div class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 p-4">
+                    <div class="flex items-center gap-3">
+                      <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-violet-500/40 to-cyan-400/40"></div>
+                      <div>
+                        <h4 class="font-semibold">Elite Barber Studio</h4>
+                        <p class="text-sm text-gray-400">4.9 Rating</p>
+                      </div>
+                    </div>
+                    <button class="rounded-xl bg-violet-500/20 px-4 py-2 text-sm text-violet-300">Book</button>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="mx-auto max-w-7xl px-6 py-24">
+      <div class="mx-auto max-w-3xl text-center">
+        <h2 class="text-4xl font-black tracking-tight lg:text-5xl">Built For Modern Grooming Businesses</h2>
+        <p class="mt-6 text-lg leading-relaxed text-gray-400">
+          Everything salons and barbers need to manage appointments, clients, payments,
+          and growth.
+        </p>
+      </div>
+
+      <div class="mt-16 grid gap-8 md:grid-cols-3">
+        {% for feature in feature_cards %}
+          <div class="group rounded-3xl border border-white/10 bg-white/5 p-8 transition duration-300 hover:bg-white/10">
+            <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/20 transition group-hover:scale-110">
+              <div class="h-8 w-8 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400"></div>
+            </div>
+            <h3 class="text-2xl font-bold">{{ feature.title }}</h3>
+            <p class="mt-4 leading-relaxed text-gray-400">{{ feature.description }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="services" class="border-y border-white/5 bg-white/[0.02] py-24">
+      <div class="mx-auto max-w-7xl px-6">
+        <div class="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
+          <div>
+            <h2 class="text-4xl font-black tracking-tight lg:text-5xl">Explore Popular Services</h2>
+            <p class="mt-4 max-w-2xl text-lg text-gray-400">
+              Browse trending grooming and beauty services available near you.
+            </p>
+          </div>
+          <a href="#booking" class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 transition hover:bg-white/10">
+            View All Services
+          </a>
+        </div>
+
+        <div class="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {% for service in service_names %}
+            <div class="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 transition hover:scale-[1.02]">
+              <div class="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-cyan-400/10 opacity-0 transition group-hover:opacity-100"></div>
+              <div class="relative">
+                <div class="mb-6 h-16 w-16 rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/20"></div>
+                <h3 class="text-2xl font-bold">{{ service }}</h3>
+                <p class="mt-3 text-gray-400">
+                  Premium professional {{ service.lower() }} services from verified specialists.
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="booking" class="mx-auto max-w-7xl px-6 py-24">
+      <div class="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 lg:p-12">
+        <h2 class="text-3xl font-black tracking-tight lg:text-4xl">Book Your Session</h2>
+        <p class="mt-3 max-w-2xl text-gray-400">Reserve your preferred service in seconds with instant confirmation.</p>
+
+        <form class="mt-8 grid gap-4 md:grid-cols-2" method="post" action="{{ url_for('main.book') }}">
+          <input required name="customer_name" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3" placeholder="Full name" />
+          <input required type="email" name="customer_email" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3" placeholder="Email" />
+          <input required name="customer_phone" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3" placeholder="Phone" />
+          <select required name="service_name" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3">
+            {% for service in services %}
+              <option value="{{ service.name }}">{{ service.name }} - ${{ '%.2f'|format(service.price) }}</option>
+            {% endfor %}
+          </select>
+          <input required type="datetime-local" name="appointment_datetime" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3 md:col-span-2" />
+          <textarea name="notes" rows="3" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3 md:col-span-2" placeholder="Notes (optional)"></textarea>
+          <button class="rounded-2xl bg-gradient-to-r from-violet-500 to-cyan-400 px-8 py-4 text-lg font-semibold text-white transition hover:scale-[1.01] md:col-span-2">Submit Booking</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="download" class="mx-auto max-w-7xl px-6 py-24">
+      <div class="overflow-hidden rounded-[3rem] border border-white/10 bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-400/10 p-10 lg:p-16">
+        <div class="grid items-center gap-12 lg:grid-cols-2">
+          <div>
+            <h2 class="text-4xl font-black leading-tight tracking-tight lg:text-6xl">Take FineCuts Everywhere.</h2>
+            <p class="mt-6 max-w-xl text-lg leading-relaxed text-gray-300">
+              Book appointments, receive reminders, collect loyalty rewards, and manage
+              your grooming lifestyle directly from your phone.
+            </p>
+
+            <div class="mt-10 flex flex-wrap gap-4">
+              <button class="rounded-2xl bg-white px-8 py-4 font-semibold text-black transition hover:scale-105">Download Android App</button>
+              <button class="rounded-2xl border border-white/10 px-8 py-4 transition hover:bg-white/10">Download iPhone App</button>
+            </div>
+          </div>
+
+          <div class="relative flex justify-center">
+            <div class="h-[520px] w-[260px] rounded-[3rem] border border-white/10 bg-black/40 shadow-2xl backdrop-blur-xl"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="contact" class="border-t border-white/10 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-6 lg:flex-row">
+        <div>
+          <h3 class="text-2xl font-bold">FineCuts</h3>
+          <p class="mt-3 max-w-md leading-relaxed text-gray-400">
+            The modern booking and management platform for grooming businesses across
+            Africa.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8 text-sm md:grid-cols-4">
+          <div>
+            <h4 class="mb-4 font-semibold">Platform</h4>
+            <ul class="space-y-3 text-gray-400">
+              <li>Features</li>
+              <li>Pricing</li>
+              <li>Mobile App</li>
+              <li>Dashboard</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-4 font-semibold">Company</h4>
+            <ul class="space-y-3 text-gray-400">
+              <li>About</li>
+              <li>Partners</li>
+              <li>Careers</li>
+              <li>Blog</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-4 font-semibold">Support</h4>
+            <ul class="space-y-3 text-gray-400">
+              <li>Help Center</li>
+              <li>FAQs</li>
+              <li>Terms</li>
+              <li>Privacy</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="mb-4 font-semibold">Contact</h4>
+            <ul class="space-y-3 text-gray-400">
+              <li>Nairobi, Kenya</li>
+              <li>support@finecuts.app</li>
+              <li>+254 700 000000</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

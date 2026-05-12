@@ -88,7 +88,7 @@ def login(client, email, password="pass"):
 def test_public_landing(client):
     res = client.get("/")
     assert res.status_code == 200
-    assert b"GardenCity Barbers" in res.data
+    assert b"FineCuts" in res.data
 
 
 def test_staff_cannot_access_admin_dashboard(client):
