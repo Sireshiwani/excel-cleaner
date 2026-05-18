@@ -4,7 +4,7 @@ import pytest
 
 from barbershop import create_app
 from barbershop.extensions import db
-from barbershop.models import Expense, Sale, Service, User
+from barbershop.models import Appointment, Expense, Sale, Service, User
 
 
 @pytest.fixture()
@@ -118,3 +118,43 @@ def test_export_csv(client):
     assert res.status_code == 200
     assert b"gross_sale" in res.data
     assert b"shop_net" in res.data
+
+
+def test_api_booking_applies_membership_discount(client, app):
+    with app.app_context():
+        service = Service.query.filter_by(name="Cut").first()
+
+    res = client.post(
+        "/api/book",
+        json={
+            "user_id": "member_client",
+            "customer_name": "Alex Doe",
+            "customer_email": "alex@example.com",
+            "customer_phone": "5551112222",
+            "service_id": service.id,
+            "time": "2030-01-01T10:30",
+            "referral_code": "VIP-NAIROBI",
+            "preferred_barber": "Jordan King",
+            "notes": "First visit",
+        },
+    )
+
+    assert res.status_code == 200
+    payload = res.get_json()
+    assert payload["status"] == "success"
+    assert payload["is_member"] is True
+    assert payload["price"] == 36.0
+    assert payload["booking_id"] > 0
+
+    with app.app_context():
+        appointment = db.session.get(Appointment, payload["booking_id"])
+        assert appointment is not None
+        assert appointment.service_name == "Cut"
+
+
+def test_api_booking_requires_expected_fields(client):
+    res = client.post("/api/book", json={"customer_name": "Only Name"})
+    assert res.status_code == 400
+    payload = res.get_json()
+    assert payload["status"] == "error"
+    assert "Missing required fields" in payload["error"]

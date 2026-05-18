@@ -9,6 +9,7 @@ from flask import (
     Blueprint,
     Response,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -50,6 +51,35 @@ def parse_dt(value: str) -> datetime:
     return datetime.strptime(value, "%Y-%m-%dT%H:%M")
 
 
+def parse_booking_time(value: str) -> datetime:
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError as exc:
+        raise ValueError("Invalid appointment time format.") from exc
+    return parsed.replace(tzinfo=None) if parsed.tzinfo else parsed
+
+
+def check_membership(user_id: str | None, referral_code: str | None = None) -> bool:
+    code = (referral_code or "").strip().upper()
+    if code.startswith("VIP") or code.startswith("CLUB"):
+        return True
+    identifier = (user_id or "").strip().lower()
+    return identifier.endswith("@finecuts.club") or identifier.startswith("member_")
+
+
+def calculate_price(service_id: str, is_member: bool) -> tuple[float, Service]:
+    service = None
+    normalized = service_id.strip()
+    if normalized.isdigit():
+        service = db.session.get(Service, int(normalized))
+    if not service:
+        service = Service.query.filter(Service.name.ilike(normalized)).first()
+    if not service:
+        raise ValueError("Selected service was not found.")
+    price = service.price * (0.9 if is_member else 1.0)
+    return round(price, 2), service
+
+
 @bp.route("/")
 def index():
     services = Service.query.order_by(Service.price.asc()).all()
@@ -73,6 +103,59 @@ def book():
     db.session.commit()
     flash("Appointment request submitted. We will contact you soon.", "success")
     return redirect(url_for("main.index"))
+
+
+@bp.route("/api/book", methods=["POST"])
+def handle_booking():
+    data = request.get_json(silent=True) or {}
+    required = ["customer_name", "customer_email", "customer_phone", "service_id", "time"]
+    missing = [field for field in required if not str(data.get(field, "")).strip()]
+    if missing:
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "error": f"Missing required fields: {', '.join(missing)}",
+                }
+            ),
+            400,
+        )
+
+    is_member = check_membership(data.get("user_id"), data.get("referral_code"))
+    try:
+        price, service = calculate_price(str(data["service_id"]), is_member)
+        appointment_time = parse_booking_time(str(data["time"]))
+    except ValueError as exc:
+        return jsonify({"status": "error", "error": str(exc)}), 400
+
+    default_staff = User.query.filter(User.role == "staff").order_by(User.id.asc()).first()
+    notes = (data.get("notes") or "").strip()
+    preferred_barber = (data.get("preferred_barber") or "").strip()
+    metadata = f"Quoted Price: {price:.2f}; Member: {'yes' if is_member else 'no'}"
+    if preferred_barber:
+        metadata = f"{metadata}; Preferred Barber: {preferred_barber}"
+    merged_notes = " | ".join(part for part in [notes, metadata] if part)[:250]
+
+    appointment = Appointment(
+        customer_name=str(data["customer_name"]).strip(),
+        customer_email=str(data["customer_email"]).strip().lower(),
+        customer_phone=str(data["customer_phone"]).strip(),
+        service_name=service.name,
+        notes=merged_notes,
+        appointment_datetime=appointment_time,
+        staff_id=default_staff.id if default_staff else None,
+    )
+    db.session.add(appointment)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "status": "success",
+            "booking_id": appointment.id,
+            "price": price,
+            "is_member": is_member,
+        }
+    )
 
 
 @bp.route("/login", methods=["GET", "POST"])

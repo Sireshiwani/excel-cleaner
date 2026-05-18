@@ -1,301 +1,252 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FineCuts - Modern Grooming Platform</title>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fine Cuts | Premium Grooming</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="min-h-screen overflow-x-hidden bg-[#070B14] text-white">
-    {% set feature_cards = [
-      {
-        "title": "Instant Booking",
-        "description": "Book barbers and salons in real-time with seamless scheduling and confirmations."
-      },
-      {
-        "title": "Verified Professionals",
-        "description": "Connect with trusted barbers, salons, stylists, and grooming experts near you."
-      },
-      {
-        "title": "Fast Payments",
-        "description": "Integrated mobile money and instant vendor payouts for a smooth experience."
-      }
-    ] %}
-
-    {% set service_names = [
-      "Haircuts",
-      "Dreadlocks",
-      "Beard Grooming",
-      "Braiding",
-      "Nail Care",
-      "Spa & Massage"
-    ] %}
-
-    <nav class="sticky top-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-xl">
-      <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <div class="flex items-center gap-3">
-          <div class="h-10 w-10 rounded-2xl bg-gradient-to-br from-violet-500 to-cyan-400"></div>
-          <div>
-            <h1 class="text-xl font-bold tracking-tight">FineCuts</h1>
-            <p class="text-xs text-gray-400">Modern Grooming Platform</p>
-          </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
+        <a href="#top" class="text-2xl font-bold tracking-tighter text-gold-gradient uppercase">Fine Cuts</a>
+        <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-light">
+            <a href="#services" class="hover:text-yellow-500 transition">Services</a>
+            <a href="#team" class="hover:text-yellow-500 transition">Master Barbers</a>
+            <a href="#booking" class="hover:text-yellow-500 transition">The Club</a>
         </div>
-
-        <div class="hidden items-center gap-8 text-sm text-gray-300 md:flex">
-          <a href="#features" class="transition hover:text-white">Features</a>
-          <a href="#services" class="transition hover:text-white">Services</a>
-          <a href="#download" class="transition hover:text-white">Mobile App</a>
-          <a href="#contact" class="transition hover:text-white">Contact</a>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <a href="{{ url_for('main.login') }}" class="hidden rounded-xl border border-white/10 px-5 py-2 transition hover:bg-white/5 md:block">Login</a>
-          <a href="#booking" class="rounded-xl bg-gradient-to-r from-violet-500 to-cyan-400 px-5 py-2 font-medium transition hover:scale-105">Get Started</a>
-        </div>
-      </div>
+        <a href="#booking" class="bg-[#D4A017] text-black px-6 py-2 rounded-full font-bold text-xs uppercase tracking-tighter hover:scale-105 transition">Book Now</a>
     </nav>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="mx-auto mt-4 max-w-7xl px-6">
-          <div class="space-y-2">
-            {% for category, message in messages %}
-              <div class="rounded-xl border border-white/10 px-4 py-3 text-sm {{ 'bg-red-500/15 text-red-200' if category == 'error' else 'bg-emerald-500/15 text-emerald-200' }}">{{ message }}</div>
+    <header id="top" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <video autoplay muted loop playsinline class="absolute w-auto min-w-full min-h-full max-w-none grayscale opacity-40">
+            <source src="https://videos.pexels.com/video-files/3998510/3998510-hd_1920_1080_25fps.mp4" type="video/mp4" />
+        </video>
+
+        <div class="relative z-10 text-center px-4 max-w-4xl">
+            <span class="text-yellow-500 uppercase tracking-[0.5em] text-xs mb-4 block">Elevate Your Presence</span>
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 leading-tight">Sharp Cuts.<br />Built For Kings.</h1>
+            <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light">The ultimate grooming experience for the modern gentleman in Nairobi.</p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#booking" class="bg-[#D4A017] text-black px-10 py-4 rounded-full font-bold text-sm uppercase text-center">Secure an Appointment</a>
+                <a href="#services" class="border border-white/20 hover:bg-white/10 px-10 py-4 rounded-full font-bold text-sm uppercase transition text-center">View Our Portfolio</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="services" class="py-24 px-8 max-w-7xl mx-auto">
+        <div class="flex justify-between items-end mb-16 gap-6 flex-wrap">
+            <div>
+                <h2 class="text-4xl md:text-5xl mb-2">The Service Menu</h2>
+                <p class="text-gray-500">Precision grooming tailored to your signature look.</p>
+            </div>
+            <a href="#booking" class="text-yellow-500 border-b border-yellow-500 pb-1 text-sm tracking-widest uppercase">Full Menu</a>
+        </div>
+
+        {% set card_images = [
+            'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1622296089863-eb7fc530daa8?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1517832606299-7ae9b720a186?auto=format&fit=crop&w=1200&q=80'
+        ] %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for service in services[:3] %}
+            <div class="glass-card p-8 group">
+                <div class="overflow-hidden rounded-xl mb-6 h-48">
+                    <img src="{{ card_images[loop.index0 % card_images|length] }}" alt="{{ service.name }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
+                </div>
+                <h3 class="text-2xl mb-2">{{ service.name }}</h3>
+                <p class="text-gray-400 text-sm font-light mb-6 leading-relaxed">{{ service.description or 'A seamless premium grooming treatment with attention to detail and a refined finish.' }}</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-bold tracking-tighter">Ksh {{ "%.0f"|format(service.price * 100) }}</span>
+                    <a href="#booking" class="text-[#D4A017] text-xs font-bold uppercase border-b border-transparent hover:border-yellow-500 transition">Book Item</a>
+                </div>
+            </div>
             {% endfor %}
-          </div>
         </div>
-      {% endif %}
-    {% endwith %}
+    </section>
 
-    <section class="relative">
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.25),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.18),transparent_35%)]"></div>
-
-      <div class="relative mx-auto grid max-w-7xl items-center gap-16 px-6 py-24 lg:grid-cols-2 lg:py-32">
-        <div>
-          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-sm text-violet-300">
-            Premium Grooming Experience
-          </div>
-
-          <h1 class="text-5xl font-black leading-tight tracking-tight lg:text-7xl">
-            Book Premium
-            <span class="bg-gradient-to-r from-violet-400 to-cyan-300 bg-clip-text text-transparent"> Grooming</span>
-            <br />
-            Services Instantly.
-          </h1>
-
-          <p class="mt-8 max-w-xl text-lg leading-relaxed text-gray-300">
-            Discover trusted barbers, salons, and stylists near you with seamless booking,
-            real-time availability, mobile payments, and loyalty rewards.
-          </p>
-
-          <div class="mt-10 flex flex-col gap-4 sm:flex-row">
-            <a href="#booking" class="rounded-2xl bg-gradient-to-r from-violet-500 to-cyan-400 px-8 py-4 text-center text-lg font-semibold shadow-2xl shadow-violet-500/20 transition hover:scale-105">
-              Book Appointment
-            </a>
-            <a href="#services" class="rounded-2xl border border-white/10 bg-white/5 px-8 py-4 text-center text-lg transition hover:bg-white/10">
-              Explore Salons
-            </a>
-          </div>
-
-          <div class="mt-12 grid max-w-lg grid-cols-3 gap-6">
-            <div>
-              <h3 class="text-3xl font-bold">20K+</h3>
-              <p class="mt-1 text-sm text-gray-400">Bookings</p>
-            </div>
-            <div>
-              <h3 class="text-3xl font-bold">500+</h3>
-              <p class="mt-1 text-sm text-gray-400">Professionals</p>
-            </div>
-            <div>
-              <h3 class="text-3xl font-bold">15+</h3>
-              <p class="mt-1 text-sm text-gray-400">Cities</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="relative flex justify-center">
-          <div class="absolute h-80 w-80 rounded-full bg-violet-500/20 blur-3xl"></div>
-
-          <div class="relative h-[650px] w-[320px] overflow-hidden rounded-[3rem] border border-white/10 bg-[#0F172A] shadow-2xl">
-            <div class="flex h-14 items-center justify-center border-b border-white/10 text-sm text-gray-400">
-              FineCuts Mobile
-            </div>
-
-            <div class="space-y-5 p-5">
-              <div class="rounded-3xl bg-gradient-to-br from-violet-500 to-cyan-400 p-5 text-white">
-                <p class="text-sm opacity-90">Next Appointment</p>
-                <h3 class="mt-2 text-2xl font-bold">Fade & Beard Trim</h3>
-                <p class="mt-2 opacity-90">Today • 3:00 PM</p>
-              </div>
-
-              <div class="space-y-4">
-                {% for _ in range(3) %}
-                  <div class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 p-4">
-                    <div class="flex items-center gap-3">
-                      <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-violet-500/40 to-cyan-400/40"></div>
-                      <div>
-                        <h4 class="font-semibold">Elite Barber Studio</h4>
-                        <p class="text-sm text-gray-400">4.9 Rating</p>
-                      </div>
-                    </div>
-                    <button class="rounded-xl bg-violet-500/20 px-4 py-2 text-sm text-violet-300">Book</button>
-                  </div>
+    <section id="team" class="px-8 pb-24 max-w-7xl mx-auto">
+        <div class="glass-card p-10">
+            <h2 class="text-3xl md:text-4xl mb-2">Master Barbers</h2>
+            <p class="text-gray-400 mb-8">Meet the professionals shaping signature styles daily.</p>
+            <div class="grid md:grid-cols-3 gap-6">
+                {% for member in team[:3] %}
+                <div class="rounded-2xl border border-white/10 p-5 bg-black/20">
+                    <h3 class="text-2xl">{{ member.name }}</h3>
+                    <p class="text-yellow-500 uppercase tracking-widest text-xs mt-2">{{ member.role }}</p>
+                    <p class="text-gray-400 mt-3 text-sm">Commission {{ "%.0f"|format(member.commission_rate * 100) }}%</p>
+                </div>
                 {% endfor %}
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </section>
 
-    <section id="features" class="mx-auto max-w-7xl px-6 py-24">
-      <div class="mx-auto max-w-3xl text-center">
-        <h2 class="text-4xl font-black tracking-tight lg:text-5xl">Built For Modern Grooming Businesses</h2>
-        <p class="mt-6 text-lg leading-relaxed text-gray-400">
-          Everything salons and barbers need to manage appointments, clients, payments,
-          and growth.
-        </p>
-      </div>
-
-      <div class="mt-16 grid gap-8 md:grid-cols-3">
-        {% for feature in feature_cards %}
-          <div class="group rounded-3xl border border-white/10 bg-white/5 p-8 transition duration-300 hover:bg-white/10">
-            <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/20 transition group-hover:scale-110">
-              <div class="h-8 w-8 rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400"></div>
+    <section id="booking" class="px-8 pb-24 max-w-5xl mx-auto">
+        <div class="glass-card p-10">
+            <div class="flex items-center justify-between gap-4 flex-wrap mb-8">
+                <div>
+                    <h2 class="text-3xl md:text-4xl mb-2">Secure Your Appointment</h2>
+                    <p class="text-gray-400">Complete this 3-step booking and get instant confirmation.</p>
+                </div>
+                <div class="flex items-center gap-2 text-sm" id="progress-indicator">
+                    <span class="step-dot active h-8 w-8 rounded-full inline-flex items-center justify-center" data-step="1">1</span>
+                    <span class="step-dot h-8 w-8 rounded-full inline-flex items-center justify-center" data-step="2">2</span>
+                    <span class="step-dot h-8 w-8 rounded-full inline-flex items-center justify-center" data-step="3">3</span>
+                </div>
             </div>
-            <h3 class="text-2xl font-bold">{{ feature.title }}</h3>
-            <p class="mt-4 leading-relaxed text-gray-400">{{ feature.description }}</p>
-          </div>
-        {% endfor %}
-      </div>
+
+            <div id="booking-feedback" class="hidden mb-6 rounded-xl border border-white/10 px-4 py-3 text-sm"></div>
+
+            <form id="booking-wizard" class="space-y-6">
+                <div id="step-1" class="grid md:grid-cols-2 gap-4">
+                    <input id="customer_name" required class="bg-black/30 border border-white/10 rounded-xl px-4 py-3" placeholder="Full Name" />
+                    <input id="customer_email" type="email" required class="bg-black/30 border border-white/10 rounded-xl px-4 py-3" placeholder="Email Address" />
+                    <input id="customer_phone" required class="bg-black/30 border border-white/10 rounded-xl px-4 py-3" placeholder="Phone Number" />
+                    <input id="referral_code" class="bg-black/30 border border-white/10 rounded-xl px-4 py-3" placeholder="Referral / Membership Code (Optional)" />
+                    <div class="md:col-span-2 flex justify-end">
+                        <button type="button" onclick="nextStep(1)" class="bg-[#D4A017] text-black px-8 py-3 rounded-full font-bold text-sm uppercase">Continue</button>
+                    </div>
+                </div>
+
+                <div id="step-2" class="hidden grid md:grid-cols-2 gap-4">
+                    <select id="service_id" required class="bg-black/30 border border-white/10 rounded-xl px-4 py-3 md:col-span-2">
+                        <option value="">Select a Service</option>
+                        {% for service in services %}
+                        <option value="{{ service.id }}" data-price="{{ service.price }}">{{ service.name }} — Ksh {{ "%.0f"|format(service.price * 100) }}</option>
+                        {% endfor %}
+                    </select>
+                    <input id="appointment_time" type="datetime-local" required class="bg-black/30 border border-white/10 rounded-xl px-4 py-3" />
+                    <input id="preferred_barber" class="bg-black/30 border border-white/10 rounded-xl px-4 py-3" placeholder="Preferred Barber (Optional)" />
+                    <textarea id="booking_notes" rows="3" class="bg-black/30 border border-white/10 rounded-xl px-4 py-3 md:col-span-2" placeholder="Extra notes"></textarea>
+                    <div class="md:col-span-2 flex justify-between">
+                        <button type="button" onclick="previousStep(2)" class="border border-white/20 px-8 py-3 rounded-full font-bold text-sm uppercase">Back</button>
+                        <button type="button" onclick="nextStep(2)" class="bg-[#D4A017] text-black px-8 py-3 rounded-full font-bold text-sm uppercase">Review</button>
+                    </div>
+                </div>
+
+                <div id="step-3" class="hidden space-y-4">
+                    <div class="rounded-2xl border border-white/10 bg-black/20 p-6 text-sm leading-relaxed" id="booking-summary"></div>
+                    <div class="flex justify-between">
+                        <button type="button" onclick="previousStep(3)" class="border border-white/20 px-8 py-3 rounded-full font-bold text-sm uppercase">Back</button>
+                        <button type="submit" class="bg-[#D4A017] text-black px-8 py-3 rounded-full font-bold text-sm uppercase">Confirm Booking</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </section>
 
-    <section id="services" class="border-y border-white/5 bg-white/[0.02] py-24">
-      <div class="mx-auto max-w-7xl px-6">
-        <div class="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
-          <div>
-            <h2 class="text-4xl font-black tracking-tight lg:text-5xl">Explore Popular Services</h2>
-            <p class="mt-4 max-w-2xl text-lg text-gray-400">
-              Browse trending grooming and beauty services available near you.
-            </p>
-          </div>
-          <a href="#booking" class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 transition hover:bg-white/10">
-            View All Services
-          </a>
-        </div>
+    <div class="fixed bottom-8 right-8 z-50 md:hidden">
+        <a href="#booking" class="bg-green-600 p-4 rounded-full shadow-2xl animate-bounce inline-flex">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.3 13.6c-.2.6-1.1 1.1-1.5 1.1-.4.1-.9.1-1.5-.1-.4-.1-.9-.3-1.6-.6-2.7-1.2-4.4-4.1-4.5-4.3-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.3-.3.7-.4.9-.4h.7c.2 0 .5-.1.7.4.2.6.8 2 .8 2.2 0 .2 0 .4-.1.6-.1.2-.2.4-.4.6-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.5 1.3 2.7 1.7 3.1 1.9.4.2.6.1.8-.1.2-.2 1-1.1 1.2-1.5.2-.4.5-.3.8-.2.3.1 1.8.8 2.1.9.3.2.5.3.5.5 0 .2-.1.9-.3 1.4Z" /></svg>
+        </a>
+    </div>
 
-        <div class="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {% for service in service_names %}
-            <div class="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 transition hover:scale-[1.02]">
-              <div class="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-cyan-400/10 opacity-0 transition group-hover:opacity-100"></div>
-              <div class="relative">
-                <div class="mb-6 h-16 w-16 rounded-2xl bg-gradient-to-br from-violet-500/20 to-cyan-400/20"></div>
-                <h3 class="text-2xl font-bold">{{ service }}</h3>
-                <p class="mt-3 text-gray-400">
-                  Premium professional {{ service.lower() }} services from verified specialists.
-                </p>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    </section>
+    <script>
+      let activeStep = 1;
 
-    <section id="booking" class="mx-auto max-w-7xl px-6 py-24">
-      <div class="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 lg:p-12">
-        <h2 class="text-3xl font-black tracking-tight lg:text-4xl">Book Your Session</h2>
-        <p class="mt-3 max-w-2xl text-gray-400">Reserve your preferred service in seconds with instant confirmation.</p>
+      const updateProgressIndicator = (step) => {
+        document.querySelectorAll('#progress-indicator .step-dot').forEach((dot) => {
+          const dotStep = Number(dot.dataset.step);
+          dot.classList.toggle('active', dotStep <= step);
+        });
+      };
 
-        <form class="mt-8 grid gap-4 md:grid-cols-2" method="post" action="{{ url_for('main.book') }}">
-          <input required name="customer_name" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3" placeholder="Full name" />
-          <input required type="email" name="customer_email" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3" placeholder="Email" />
-          <input required name="customer_phone" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3" placeholder="Phone" />
-          <select required name="service_name" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3">
-            {% for service in services %}
-              <option value="{{ service.name }}">{{ service.name }} - ${{ '%.2f'|format(service.price) }}</option>
-            {% endfor %}
-          </select>
-          <input required type="datetime-local" name="appointment_datetime" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3 md:col-span-2" />
-          <textarea name="notes" rows="3" class="rounded-xl border border-white/10 bg-black/40 px-4 py-3 md:col-span-2" placeholder="Notes (optional)"></textarea>
-          <button class="rounded-2xl bg-gradient-to-r from-violet-500 to-cyan-400 px-8 py-4 text-lg font-semibold text-white transition hover:scale-[1.01] md:col-span-2">Submit Booking</button>
-        </form>
-      </div>
-    </section>
+      const nextStep = (currentStep) => {
+        if (currentStep === 1) {
+          const required = ['customer_name', 'customer_email', 'customer_phone'];
+          for (const field of required) {
+            const el = document.getElementById(field);
+            if (!el.value.trim()) {
+              el.focus();
+              showFeedback('Please complete all required personal details.', true);
+              return;
+            }
+          }
+        }
 
-    <section id="download" class="mx-auto max-w-7xl px-6 py-24">
-      <div class="overflow-hidden rounded-[3rem] border border-white/10 bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-400/10 p-10 lg:p-16">
-        <div class="grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <h2 class="text-4xl font-black leading-tight tracking-tight lg:text-6xl">Take FineCuts Everywhere.</h2>
-            <p class="mt-6 max-w-xl text-lg leading-relaxed text-gray-300">
-              Book appointments, receive reminders, collect loyalty rewards, and manage
-              your grooming lifestyle directly from your phone.
-            </p>
+        if (currentStep === 2) {
+          const service = document.getElementById('service_id').value;
+          const time = document.getElementById('appointment_time').value;
+          if (!service || !time) {
+            showFeedback('Choose a service and appointment time before review.', true);
+            return;
+          }
+          renderSummary();
+        }
 
-            <div class="mt-10 flex flex-wrap gap-4">
-              <button class="rounded-2xl bg-white px-8 py-4 font-semibold text-black transition hover:scale-105">Download Android App</button>
-              <button class="rounded-2xl border border-white/10 px-8 py-4 transition hover:bg-white/10">Download iPhone App</button>
-            </div>
-          </div>
+        document.getElementById(`step-${currentStep}`).classList.add('hidden');
+        document.getElementById(`step-${currentStep + 1}`).classList.remove('hidden');
+        activeStep = currentStep + 1;
+        updateProgressIndicator(activeStep);
+      };
 
-          <div class="relative flex justify-center">
-            <div class="h-[520px] w-[260px] rounded-[3rem] border border-white/10 bg-black/40 shadow-2xl backdrop-blur-xl"></div>
-          </div>
-        </div>
-      </div>
-    </section>
+      const previousStep = (currentStep) => {
+        document.getElementById(`step-${currentStep}`).classList.add('hidden');
+        document.getElementById(`step-${currentStep - 1}`).classList.remove('hidden');
+        activeStep = currentStep - 1;
+        updateProgressIndicator(activeStep);
+      };
 
-    <footer id="contact" class="border-t border-white/10 py-12">
-      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 px-6 lg:flex-row">
-        <div>
-          <h3 class="text-2xl font-bold">FineCuts</h3>
-          <p class="mt-3 max-w-md leading-relaxed text-gray-400">
-            The modern booking and management platform for grooming businesses across
-            Africa.
-          </p>
-        </div>
+      const showFeedback = (message, isError = false) => {
+        const feedback = document.getElementById('booking-feedback');
+        feedback.classList.remove('hidden', 'bg-red-500/15', 'text-red-200', 'bg-emerald-500/15', 'text-emerald-200');
+        feedback.classList.add(isError ? 'bg-red-500/15' : 'bg-emerald-500/15', isError ? 'text-red-200' : 'text-emerald-200');
+        feedback.textContent = message;
+      };
 
-        <div class="grid grid-cols-2 gap-8 text-sm md:grid-cols-4">
-          <div>
-            <h4 class="mb-4 font-semibold">Platform</h4>
-            <ul class="space-y-3 text-gray-400">
-              <li>Features</li>
-              <li>Pricing</li>
-              <li>Mobile App</li>
-              <li>Dashboard</li>
-            </ul>
-          </div>
+      const renderSummary = () => {
+        const serviceSelect = document.getElementById('service_id');
+        const selected = serviceSelect.options[serviceSelect.selectedIndex];
+        const summary = document.getElementById('booking-summary');
+        summary.innerHTML = `
+          <p><strong>Name:</strong> ${document.getElementById('customer_name').value}</p>
+          <p><strong>Email:</strong> ${document.getElementById('customer_email').value}</p>
+          <p><strong>Phone:</strong> ${document.getElementById('customer_phone').value}</p>
+          <p><strong>Service:</strong> ${selected ? selected.text : ''}</p>
+          <p><strong>Time:</strong> ${document.getElementById('appointment_time').value.replace('T', ' ')}</p>
+          <p><strong>Referral/Membership:</strong> ${document.getElementById('referral_code').value || 'None'}</p>
+          <p><strong>Preferred Barber:</strong> ${document.getElementById('preferred_barber').value || 'Any available barber'}</p>
+        `;
+      };
 
-          <div>
-            <h4 class="mb-4 font-semibold">Company</h4>
-            <ul class="space-y-3 text-gray-400">
-              <li>About</li>
-              <li>Partners</li>
-              <li>Careers</li>
-              <li>Blog</li>
-            </ul>
-          </div>
+      document.getElementById('booking-wizard').addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-          <div>
-            <h4 class="mb-4 font-semibold">Support</h4>
-            <ul class="space-y-3 text-gray-400">
-              <li>Help Center</li>
-              <li>FAQs</li>
-              <li>Terms</li>
-              <li>Privacy</li>
-            </ul>
-          </div>
+        const payload = {
+          user_id: document.getElementById('customer_email').value,
+          customer_name: document.getElementById('customer_name').value,
+          customer_email: document.getElementById('customer_email').value,
+          customer_phone: document.getElementById('customer_phone').value,
+          service_id: document.getElementById('service_id').value,
+          time: document.getElementById('appointment_time').value,
+          referral_code: document.getElementById('referral_code').value,
+          preferred_barber: document.getElementById('preferred_barber').value,
+          notes: document.getElementById('booking_notes').value,
+        };
 
-          <div>
-            <h4 class="mb-4 font-semibold">Contact</h4>
-            <ul class="space-y-3 text-gray-400">
-              <li>Nairobi, Kenya</li>
-              <li>support@finecuts.app</li>
-              <li>+254 700 000000</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </body>
+        try {
+          const response = await fetch('/api/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          const result = await response.json();
+          if (!response.ok || result.status !== 'success') {
+            throw new Error(result.error || 'Booking failed, please try again.');
+          }
+
+          showFeedback(`Booking confirmed (#${result.booking_id}). Estimated price: Ksh ${Math.round(result.price * 100)}${result.is_member ? ' (member pricing applied)' : ''}.`);
+          document.getElementById('booking-wizard').reset();
+          document.getElementById('step-3').classList.add('hidden');
+          document.getElementById('step-1').classList.remove('hidden');
+          activeStep = 1;
+          updateProgressIndicator(activeStep);
+          document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+          showFeedback(error.message, true);
+        }
+      });
+    </script>
+</body>
 </html>
