@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="font-sans text-3xl font-bold">Staff Performance</h1>
+<p class="mt-2 text-sm text-gray-400">Your personal sales, commissions, and upcoming appointments.</p>
+
+<div class="mt-6 grid gap-4 md:grid-cols-2">
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+    <p class="text-sm text-gray-400">Recent Sales Gross</p>
+    <h2 class="mt-2 font-sans text-3xl font-bold text-gcgold">${{ '%.2f'|format(total_sales) }}</h2>
+  </article>
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+    <p class="text-sm text-gray-400">Estimated Commission</p>
+    <h2 class="mt-2 font-sans text-3xl font-bold text-gcgold">${{ '%.2f'|format(commission) }}</h2>
+  </article>
+</div>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-2">
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+    <h3 class="mb-4 font-sans text-xl font-bold">Your Recent Sales</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="text-left text-gray-400"><th>Date</th><th>Service</th><th>Price</th></tr></thead>
+        <tbody>
+        {% for sale in sales %}
+          <tr class="border-t border-gccharcoal"><td>{{ sale.date.strftime('%Y-%m-%d') }}</td><td>{{ sale.service_rendered }}</td><td>${{ '%.2f'|format(sale.price) }}</td></tr>
+        {% else %}
+          <tr><td colspan="3" class="py-4 text-gray-500">No sales yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="rounded-xl border border-gccharcoal bg-gccharcoal/40 p-5">
+    <h3 class="mb-4 font-sans text-xl font-bold">Upcoming Appointments</h3>
+    <ul class="space-y-3 text-sm">
+      {% for appt in upcoming %}
+        <li class="rounded border border-gccharcoal bg-black px-3 py-2">
+          <strong>{{ appt.customer_name }}</strong>
+          <div class="text-gray-300">{{ appt.service_name }} · {{ appt.appointment_datetime.strftime('%Y-%m-%d %H:%M') }}</div>
+        </li>
+      {% else %}
+        <li class="text-gray-500">No upcoming appointments assigned.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</div>
+{% endblock %}
